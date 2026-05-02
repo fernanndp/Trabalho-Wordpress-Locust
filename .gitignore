@@ -1,0 +1,67 @@
+# =========================
+# Docker / volumes locais
+# =========================
+mysql-db-data/
+wp-data/
+wordpress/
+db-data/
+data/
+
+# =========================
+# WordPress uploads/cache locais
+# =========================
+wp-content/cache/
+wp-content/uploads/
+wp-content/upgrade/
+wp-content/backup*/
+wp-content/debug.log
+
+# =========================
+# Arquivos de ambiente / senhas
+# =========================
+.env
+.env.*
+!.env.example
+
+# =========================
+# Python
+# =========================
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.venv/
+venv/
+env/
+
+# =========================
+# Locust / resultados brutos
+# =========================
+*.log
+.locust.conf
+
+resultados/calibracao/
+resultados/*.html
+resultados/**/*.html
+
+!resultados/
+!resultados/resumo_resultados.csv
+!resultados/resumo_resultados.xlsx
+!resultados/graficos/
+!resultados/graficos/*.png
+
+# =========================
+# Sistema operacional / editor
+# =========================
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/
+.idea/
+
+# =========================
+# Arquivos compactados temporários
+# =========================
+*.zip
+*.rar
+*.7z
