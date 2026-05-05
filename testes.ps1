@@ -1,7 +1,7 @@
 $cargas = @(
     @{ Nome = "leve"; Usuarios = 50; Spawn = 10 },
-    @{ Nome = "media"; Usuarios = 200; Spawn = 30 },
-    @{ Nome = "pesada"; Usuarios = 520; Spawn = 50 }
+    @{ Nome = "media"; Usuarios = 150; Spawn = 30 },
+    @{ Nome = "pesada"; Usuarios = 260; Spawn = 50 }
 )
 
 $cenarios = @(

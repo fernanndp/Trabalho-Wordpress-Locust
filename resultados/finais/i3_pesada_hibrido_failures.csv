@@ -1,4 +1,6 @@
 Method,Name,Error,Occurrences
-GET,hibrido_02_texto_400kb,CatchResponseError('HTTP 0. Location: '),43
-GET,hibrido_01_imagem_1mb,CatchResponseError('HTTP 0. Location: '),43
-GET,hibrido_03_imagem_300kb,CatchResponseError('HTTP 0. Location: '),44
+GET,hibrido_02_arquivo_1mb,CatchResponseError('HTTP 0. Location: '),43
+GET,hibrido_04_post_imagem_300kb,CatchResponseError('HTTP 0. Location: '),51
+GET,hibrido_05_arquivo_300kb,CatchResponseError('HTTP 0. Location: '),49
+GET,hibrido_01_post_imagem_1mb,CatchResponseError('HTTP 0. Location: '),40
+GET,hibrido_03_texto_400kb,CatchResponseError('HTTP 0. Location: '),56

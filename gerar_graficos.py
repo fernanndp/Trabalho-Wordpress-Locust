@@ -11,8 +11,8 @@ PASTA_GRAFICOS = "resultados/graficos"
 ORDEM_CARGAS = ["leve", "media", "pesada"]
 USUARIOS_POR_CARGA = {
     "leve": 50,
-    "media": 200,
-    "pesada": 520,
+    "media": 150,
+    "pesada": 260,
 }
 
 NOMES_CENARIOS = {
@@ -182,7 +182,7 @@ def gerar_14_graficos(df):
     contador = 1
 
     # 8 gráficos:
-    # Para os 4 cenários: tempo médio e RPS por número de usuários.
+    # Para os 4 cenários: tempo médio e P95 por número de usuários.
     for cenario in TODOS_CENARIOS:
         grafico_por_usuarios(
             df,
@@ -197,15 +197,15 @@ def gerar_14_graficos(df):
         grafico_por_usuarios(
             df,
             cenario,
-            "rps",
-            "Requisições por segundo",
-            "RPS",
-            f"{contador:02d}_rps_por_usuarios_{cenario}.png"
+            "p95_ms",
+            "P95 do tempo de resposta",
+            "P95 (ms)",
+            f"{contador:02d}_p95_por_usuarios_{cenario}.png"
         )
         contador += 1
 
     # 6 gráficos:
-    # Para os 3 cenários normais: tempo médio e RPS por número de instâncias.
+    # Para os 3 cenários normais: tempo médio e P95 por número de instâncias.
     for cenario in CENARIOS_NORMAIS:
         grafico_por_instancias(
             df,
@@ -220,10 +220,10 @@ def gerar_14_graficos(df):
         grafico_por_instancias(
             df,
             cenario,
-            "rps",
-            "Requisições por segundo",
-            "RPS",
-            f"{contador:02d}_rps_por_instancias_{cenario}.png"
+            "p95_ms",
+            "P95 do tempo de resposta",
+            "P95 (ms)",
+            f"{contador:02d}_p95_por_instancias_{cenario}.png"
         )
         contador += 1
 

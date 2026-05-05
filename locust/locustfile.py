@@ -2,24 +2,19 @@ import os
 from locust import HttpUser, task, between
 
 
-# Cenários disponíveis:
-# imagem_1mb
-# texto_400kb
-# imagem_300kb
-# hibrido
-
 CENARIO = os.getenv("CENARIO", "hibrido").lower()
 
-ROTAS = {
+POSTS = {
     "imagem_1mb": "/post-de-imagem-com-1mb/",
     "texto_400kb": "/post-texto-400kb/",
     "imagem_300kb": "/post-imagem-300kb/",
 }
 
-# Importante:
-# O Locust acessa o Nginx pelo host interno "http://nginx",
-# mas informa ao WordPress que o host público é localhost:8080.
-# Isso evita redirecionamento para localhost dentro do container do Locust.
+IMAGENS = {
+    "imagem_1mb": "/wp-content/uploads/2026/05/imagem_1mb.png",
+    "imagem_300kb": "/wp-content/uploads/2026/05/imagem_300kb.png",
+}
+
 WP_HEADERS = {
     "Host": os.getenv("WP_HOST_HEADER", "localhost:8080")
 }
@@ -28,7 +23,7 @@ WP_HEADERS = {
 class WordpressUser(HttpUser):
     wait_time = between(1, 3)
 
-    def get_wordpress(self, rota, nome):
+    def get_ok(self, rota, nome):
         with self.client.get(
             rota,
             name=nome,
@@ -40,43 +35,27 @@ class WordpressUser(HttpUser):
                 response.success()
             else:
                 location = response.headers.get("Location", "")
-                response.failure(
-                    f"HTTP {response.status_code}. Location: {location}"
-                )
+                response.failure(f"HTTP {response.status_code}. Location: {location}")
 
     def acessar_imagem_1mb(self):
-        self.get_wordpress(
-            ROTAS["imagem_1mb"],
-            "normal_imagem_1mb"
-        )
+        self.get_ok(POSTS["imagem_1mb"], "imagem_1mb_01_post")
+        self.get_ok(IMAGENS["imagem_1mb"], "imagem_1mb_02_arquivo")
 
     def acessar_texto_400kb(self):
-        self.get_wordpress(
-            ROTAS["texto_400kb"],
-            "normal_texto_400kb"
-        )
+        self.get_ok(POSTS["texto_400kb"], "texto_400kb_01_post")
 
     def acessar_imagem_300kb(self):
-        self.get_wordpress(
-            ROTAS["imagem_300kb"],
-            "normal_imagem_300kb"
-        )
+        self.get_ok(POSTS["imagem_300kb"], "imagem_300kb_01_post")
+        self.get_ok(IMAGENS["imagem_300kb"], "imagem_300kb_02_arquivo")
 
     def acessar_hibrido(self):
-        self.get_wordpress(
-            ROTAS["imagem_1mb"],
-            "hibrido_01_imagem_1mb"
-        )
+        self.get_ok(POSTS["imagem_1mb"], "hibrido_01_post_imagem_1mb")
+        self.get_ok(IMAGENS["imagem_1mb"], "hibrido_02_arquivo_1mb")
 
-        self.get_wordpress(
-            ROTAS["texto_400kb"],
-            "hibrido_02_texto_400kb"
-        )
+        self.get_ok(POSTS["texto_400kb"], "hibrido_03_texto_400kb")
 
-        self.get_wordpress(
-            ROTAS["imagem_300kb"],
-            "hibrido_03_imagem_300kb"
-        )
+        self.get_ok(POSTS["imagem_300kb"], "hibrido_04_post_imagem_300kb")
+        self.get_ok(IMAGENS["imagem_300kb"], "hibrido_05_arquivo_300kb")
 
     @task
     def executar_cenario(self):
