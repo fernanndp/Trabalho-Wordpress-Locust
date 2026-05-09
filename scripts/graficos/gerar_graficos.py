@@ -9,10 +9,11 @@ PASTA_RESULTADOS = "resultados/finais"
 PASTA_GRAFICOS = "resultados/graficos"
 
 ORDEM_CARGAS = ["leve", "media", "pesada"]
+
 USUARIOS_POR_CARGA = {
-    "leve": 50,
-    "media": 150,
-    "pesada": 260,
+    "leve": 100,
+    "media": 200,
+    "pesada": 290,
 }
 
 NOMES_CENARIOS = {
@@ -147,7 +148,7 @@ def grafico_por_usuarios(df, cenario, metrica, titulo_metrica, eixo_y, nome_arqu
     plt.title(f"{titulo_metrica} por usuários — {NOMES_CENARIOS[cenario]}")
     plt.xlabel("Número de usuários")
     plt.ylabel(eixo_y)
-    plt.xticks([50, 200, 520])
+    plt.xticks(sorted(USUARIOS_POR_CARGA.values()))
     plt.grid(True, alpha=0.3)
     plt.legend()
     salvar_grafico(nome_arquivo)
@@ -178,11 +179,11 @@ def grafico_por_instancias(df, cenario, metrica, titulo_metrica, eixo_y, nome_ar
     salvar_grafico(nome_arquivo)
 
 
-def gerar_14_graficos(df):
+def gerar_graficos(df):
     contador = 1
 
-    # 8 gráficos:
-    # Para os 4 cenários: tempo médio e P95 por número de usuários.
+    # 12 gráficos:
+    # Para os 4 cenários: tempo médio, P95 e taxa de erro por número de usuários.
     for cenario in TODOS_CENARIOS:
         grafico_por_usuarios(
             df,
@@ -204,8 +205,18 @@ def gerar_14_graficos(df):
         )
         contador += 1
 
-    # 6 gráficos:
-    # Para os 3 cenários normais: tempo médio e P95 por número de instâncias.
+        grafico_por_usuarios(
+            df,
+            cenario,
+            "taxa_falha_%",
+            "Taxa de erro",
+            "Taxa de erro (%)",
+            f"{contador:02d}_taxa_erro_por_usuarios_{cenario}.png"
+        )
+        contador += 1
+
+    # 9 gráficos:
+    # Para os 3 cenários normais: tempo médio, P95 e taxa de erro por número de instâncias.
     for cenario in CENARIOS_NORMAIS:
         grafico_por_instancias(
             df,
@@ -227,8 +238,17 @@ def gerar_14_graficos(df):
         )
         contador += 1
 
-    print(f"\nTotal de gráficos gerados: {contador - 1}")
+        grafico_por_instancias(
+            df,
+            cenario,
+            "taxa_falha_%",
+            "Taxa de erro",
+            "Taxa de erro (%)",
+            f"{contador:02d}_taxa_erro_por_instancias_{cenario}.png"
+        )
+        contador += 1
 
+    print(f"\nTotal de gráficos gerados: {contador - 1}")
 
 def validar_resultados(df):
     print("\nVALIDAÇÃO DOS TESTES")
@@ -287,7 +307,7 @@ def validar_resultados(df):
 def main():
     df = consolidar_resultados()
     validar_resultados(df)
-    gerar_14_graficos(df)
+    gerar_graficos(df)
 
     print("\nArquivos principais gerados:")
     print("1. resultados/resumo_resultados.csv")

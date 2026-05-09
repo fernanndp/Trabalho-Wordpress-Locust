@@ -4,15 +4,24 @@ from locust import HttpUser, task, between
 
 CENARIO = os.getenv("CENARIO", "hibrido").lower()
 
-POSTS = {
-    "imagem_1mb": "/post-de-imagem-com-1mb/",
-    "texto_400kb": "/post-texto-400kb/",
-    "imagem_300kb": "/post-imagem-300kb/",
-}
+# URLs testadas:
+# - imagem_1mb: GET direto no arquivo de imagem de aproximadamente 1 MB
+# - texto_400kb: GET no post com aproximadamente 400 KB de texto
+# - imagem_300kb: GET direto no arquivo de imagem de aproximadamente 300 KB
 
-IMAGENS = {
-    "imagem_1mb": "/wp-content/uploads/2026/05/imagem_1mb.png",
-    "imagem_300kb": "/wp-content/uploads/2026/05/imagem_300kb.png",
+ROTAS = {
+    "imagem_1mb": os.getenv(
+        "URL_IMAGEM_1MB",
+        "/wp-content/uploads/2026/05/imagem_1mb.png"
+    ),
+    "texto_400kb": os.getenv(
+        "URL_TEXTO_400KB",
+        "/post-texto-400kb/"
+    ),
+    "imagem_300kb": os.getenv(
+        "URL_IMAGEM_300KB",
+        "/wp-content/uploads/2026/05/imagem_300kb.png"
+    ),
 }
 
 WP_HEADERS = {
@@ -35,27 +44,43 @@ class WordpressUser(HttpUser):
                 response.success()
             else:
                 location = response.headers.get("Location", "")
-                response.failure(f"HTTP {response.status_code}. Location: {location}")
+                response.failure(
+                    f"HTTP {response.status_code}. Location: {location}"
+                )
 
     def acessar_imagem_1mb(self):
-        self.get_ok(POSTS["imagem_1mb"], "imagem_1mb_01_post")
-        self.get_ok(IMAGENS["imagem_1mb"], "imagem_1mb_02_arquivo")
+        self.get_ok(
+            ROTAS["imagem_1mb"],
+            "imagem_1mb"
+        )
 
     def acessar_texto_400kb(self):
-        self.get_ok(POSTS["texto_400kb"], "texto_400kb_01_post")
+        self.get_ok(
+            ROTAS["texto_400kb"],
+            "texto_400kb"
+        )
 
     def acessar_imagem_300kb(self):
-        self.get_ok(POSTS["imagem_300kb"], "imagem_300kb_01_post")
-        self.get_ok(IMAGENS["imagem_300kb"], "imagem_300kb_02_arquivo")
+        self.get_ok(
+            ROTAS["imagem_300kb"],
+            "imagem_300kb"
+        )
 
     def acessar_hibrido(self):
-        self.get_ok(POSTS["imagem_1mb"], "hibrido_01_post_imagem_1mb")
-        self.get_ok(IMAGENS["imagem_1mb"], "hibrido_02_arquivo_1mb")
+        self.get_ok(
+            ROTAS["imagem_1mb"],
+            "hibrido_01_imagem_1mb"
+        )
 
-        self.get_ok(POSTS["texto_400kb"], "hibrido_03_texto_400kb")
+        self.get_ok(
+            ROTAS["texto_400kb"],
+            "hibrido_02_texto_400kb"
+        )
 
-        self.get_ok(POSTS["imagem_300kb"], "hibrido_04_post_imagem_300kb")
-        self.get_ok(IMAGENS["imagem_300kb"], "hibrido_05_arquivo_300kb")
+        self.get_ok(
+            ROTAS["imagem_300kb"],
+            "hibrido_03_imagem_300kb"
+        )
 
     @task
     def executar_cenario(self):

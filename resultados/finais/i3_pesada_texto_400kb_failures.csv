@@ -1,1 +1,2 @@
 Method,Name,Error,Occurrences
+GET,texto_400kb,CatchResponseError('HTTP 0. Location: '),41
